@@ -3,32 +3,36 @@ using UnityEngine.InputSystem;
 
 public class BoxController : MonoBehaviour
 {
-    // Input
+    // Input variables
     private InputDevice device;
     private PlayerInput playerInput;
     private InputAction rotateAction;
     private InputAction zoomInAction;
     private InputAction zoomOutAction;
 
-    // Rotation movement
+    // Rotation movement variables
+    [Header("Rotación")]
     [SerializeField] private float mouseSensitivityFactor;
-    [SerializeField] private float minInputValue;
+    [SerializeField] private float minRotationInput;
     private Vector2 rotationInput;
 
-    // Rotation interpolation
+    // Rotation interpolation variables
     private Quaternion startRotation;
     private Quaternion targetRotation;
     private bool isRotating = false;
     private float rotationTimer = 0f;
     [SerializeField] private float rotationDuration;
 
-    // Zoom
-    private Camera mainCamera;
-    private float zoomInInput;
-    private float zoomOutInput;
+    // Zoom variables
+    [Header("Zoom")]
+    [SerializeField] private float scrollSensitivityFactor;
     [SerializeField] private float minZoom;
     [SerializeField] private float maxZoom;
     [SerializeField] private float zoomSpeed;
+    private Camera mainCamera;
+    private float zoomInInput;
+    private float zoomOutInput;
+
 
     void Awake()
     {
@@ -43,6 +47,7 @@ public class BoxController : MonoBehaviour
 
     void Update()
     {
+        // Smooth transition between rotations
         if (isRotating)
         {
             rotationTimer += Time.deltaTime / rotationDuration;
@@ -58,15 +63,25 @@ public class BoxController : MonoBehaviour
         }
 
         // Reading inputs
+        device = GetActiveDevice();
+
         rotationInput = rotateAction.ReadValue<Vector2>();
-        device = rotateAction.activeControl?.device; // Detect the last device that sent input
         RotateBox();
 
         zoomInInput = zoomInAction.ReadValue<float>();
         zoomOutInput = zoomOutAction.ReadValue<float>();
 
-        ZoomIn();
-        ZoomOut();
+        HandleZoom(zoomInInput, maxZoom, 1);
+        HandleZoom(zoomOutInput, minZoom, -1);
+    }
+
+    // Detect the last input type received
+    private InputDevice GetActiveDevice()
+    {
+        if (rotateAction.activeControl != null) return rotateAction.activeControl.device;
+        if (zoomInAction.activeControl != null) return zoomInAction.activeControl.device;
+        if (zoomOutAction.activeControl != null) return zoomOutAction.activeControl.device;
+        return null;
     }
 
     // Rotation methods
@@ -75,12 +90,12 @@ public class BoxController : MonoBehaviour
         // Save rotationInput in a new variable to process if a mouse is used
         Vector2 processedInput = rotationInput;
         if (device is Mouse)
-        processedInput *= mouseSensitivityFactor; // Scale the mouse delta so that it behaves like a stick
+        {
+            processedInput *= mouseSensitivityFactor; // Scale the mouse delta to behave as a control stick
+        }
 
         // Ignore very small inputs to avoid unwanted rotations
-        if (processedInput.magnitude < minInputValue) return;
-
-        Debug.Log(processedInput.magnitude);
+        if (processedInput.magnitude < minRotationInput) return;
 
         // Validate the dominant axis of rotation
         float absX = Mathf.Abs(processedInput.x);
@@ -116,20 +131,23 @@ public class BoxController : MonoBehaviour
         isRotating = true;
     }
 
-    // Zoom methods
-    private void ZoomIn()
+    // Zoom method
+    private void HandleZoom(float input, float limit, int direction)
     {
-        if (zoomInInput != 0 && mainCamera.transform.position.z < maxZoom)
-        {
-            mainCamera.transform.Translate(0, 0, zoomSpeed * Time.deltaTime);
-        }
-    }
+        if (input == 0) return;
 
-    private void ZoomOut()
-    {
-        if (zoomOutInput != 0 && mainCamera.transform.position.z > minZoom)
+        float totalZoom = zoomSpeed * Time.deltaTime * direction;
+
+        // Scale mouse scrolling to behave as a control trigger
+        if (device is Mouse)
         {
-            mainCamera.transform.Translate(0, 0, -zoomSpeed * Time.deltaTime);
+            totalZoom *= scrollSensitivityFactor;
         }
+
+        // Validate the limits
+        float newZPositionCamera = mainCamera.transform.position.z + totalZoom;
+        if ((direction > 0 && newZPositionCamera >= limit) || (direction < 0 && newZPositionCamera <= limit)) return;
+
+        mainCamera.transform.Translate(0, 0, totalZoom);
     }
 }

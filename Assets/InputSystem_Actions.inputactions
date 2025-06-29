@@ -533,8 +533,8 @@
                 {
                     "name": "Zoom In",
                     "type": "Value",
-                    "id": "a8f7ce5c-59e2-4327-9c41-53f1f5ebb503",
-                    "expectedControlType": "Double",
+                    "id": "795529ae-7f3f-4c7d-bda5-940192a905e0",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -543,7 +543,7 @@
                     "name": "Zoom Out",
                     "type": "Value",
                     "id": "22b6ed46-8351-41bb-9d4a-ffaa48cca1a7",
-                    "expectedControlType": "Integer",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -578,7 +578,7 @@
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "",
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -596,7 +596,29 @@
                 },
                 {
                     "name": "",
-                    "id": "56b36149-5602-43ad-be76-de79c6610ba4",
+                    "id": "3b15fe26-6b49-4858-a6dd-d2232cb21083",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom Out",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7955e569-64c7-496c-85e7-3ca817fb7335",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom Out",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "230b01c1-dcea-4e92-9092-e5d73b31b944",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
@@ -607,12 +629,12 @@
                 },
                 {
                     "name": "",
-                    "id": "3b15fe26-6b49-4858-a6dd-d2232cb21083",
-                    "path": "<Gamepad>/leftTrigger",
+                    "id": "79f7e236-6df3-43f2-a737-c6c4e22f02f1",
+                    "path": "<Mouse>/scroll/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom Out",
+                    "action": "Zoom In",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
