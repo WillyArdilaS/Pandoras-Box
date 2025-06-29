@@ -532,8 +532,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivityFactor: 0.05
-  minInputValue: 0.3
+  minRotationInput: 0.3
   rotationDuration: 0.3
+  scrollSensitivityFactor: 12
   minZoom: -10
   maxZoom: -6
   zoomSpeed: 5
