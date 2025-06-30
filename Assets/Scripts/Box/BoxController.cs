@@ -3,27 +3,27 @@ using UnityEngine.InputSystem;
 
 public class BoxController : MonoBehaviour
 {
-    // Input variables
+    // === Input ===
     private InputDevice device;
     private PlayerInput playerInput;
     private InputAction rotateAction;
     private InputAction zoomInAction;
     private InputAction zoomOutAction;
 
-    // Rotation movement variables
-    [Header("Rotación")]
+    // === Rotation movement ===
+    [Header("Rotation")]
     [SerializeField] private float mouseSensitivityFactor;
     [SerializeField] private float minRotationInput;
     private Vector2 rotationInput;
 
-    // Rotation interpolation variables
+    // === Rotation interpolation ===
+    [SerializeField] private float rotationDuration;
     private Quaternion startRotation;
     private Quaternion targetRotation;
     private bool isRotating = false;
     private float rotationTimer = 0f;
-    [SerializeField] private float rotationDuration;
 
-    // Zoom variables
+    // === Zoom ===
     [Header("Zoom")]
     [SerializeField] private float scrollSensitivityFactor;
     [SerializeField] private float minZoom;
@@ -33,11 +33,15 @@ public class BoxController : MonoBehaviour
     private float zoomInInput;
     private float zoomOutInput;
 
+    // === Getters ===
+    public bool IsRotating => isRotating;
 
     void Awake()
     {
         if (mainCamera == null)
+        {
             mainCamera = Camera.main;
+        }
 
         playerInput = GetComponent<PlayerInput>();
         rotateAction = playerInput.actions["Rotate"];
