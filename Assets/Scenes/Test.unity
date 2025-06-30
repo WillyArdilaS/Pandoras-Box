@@ -866,6 +866,7 @@ MonoBehaviour:
   mouseSensitivityFactor: 0.05
   minRotationInput: 0.3
   rotationDuration: 0.3
+  initialRotationValues: {x: 0, y: 0, z: 0, w: 0}
   scrollSensitivityFactor: 12
   minZoom: -10
   maxZoom: -7
@@ -1191,6 +1192,7 @@ MonoBehaviour:
   mouseSensitivityFactor: 0.05
   minRotationInput: 0.3
   rotationDuration: 0.3
+  initialRotationValues: {x: 0, y: 0, z: 0, w: 0}
   scrollSensitivityFactor: 12
   minZoom: -10
   maxZoom: -6
