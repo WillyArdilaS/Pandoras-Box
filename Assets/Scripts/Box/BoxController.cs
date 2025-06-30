@@ -7,6 +7,7 @@ public class BoxController : MonoBehaviour
     private InputDevice device;
     private PlayerInput playerInput;
     private InputAction rotateAction;
+    private InputAction resetRotationAction;
     private InputAction zoomInAction;
     private InputAction zoomOutAction;
 
@@ -22,6 +23,9 @@ public class BoxController : MonoBehaviour
     private Quaternion targetRotation;
     private bool isRotating = false;
     private float rotationTimer = 0f;
+
+    // === Reset rotation ===
+    [SerializeField] private Quaternion initialRotationValues;
 
     // === Zoom ===
     [Header("Zoom")]
@@ -43,10 +47,20 @@ public class BoxController : MonoBehaviour
             mainCamera = Camera.main;
         }
 
+        initialRotationValues = transform.rotation;
+
         playerInput = GetComponent<PlayerInput>();
         rotateAction = playerInput.actions["Rotate"];
+        resetRotationAction = playerInput.actions["Reset Rotation"];
         zoomInAction = playerInput.actions["Zoom In"];
         zoomOutAction = playerInput.actions["Zoom Out"];
+
+        resetRotationAction.started += ResetRotation;
+    }
+
+    void OnDestroy()
+    {
+        resetRotationAction.started -= ResetRotation;
     }
 
     void Update()
@@ -126,6 +140,13 @@ public class BoxController : MonoBehaviour
     {
         startRotation = transform.rotation;
         targetRotation = Quaternion.AngleAxis(90f * direction, Vector3.left) * transform.rotation; // Using the global X axis
+        BeginLerp();
+    }
+
+    private void ResetRotation(InputAction.CallbackContext callback)
+    {
+        startRotation = transform.rotation;
+        targetRotation = initialRotationValues;
         BeginLerp();
     }
 

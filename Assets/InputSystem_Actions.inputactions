@@ -531,7 +531,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Restart Position",
+                    "name": "Reset Rotation",
                     "type": "Button",
                     "id": "a34088ea-cf26-445d-87b0-fc54438d99c5",
                     "expectedControlType": "",
@@ -716,7 +716,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Restart Position",
+                    "action": "Reset Rotation",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -727,7 +727,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Restart Position",
+                    "action": "Reset Rotation",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
