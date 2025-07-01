@@ -67,6 +67,7 @@ public class TreePuzzleManager : MonoBehaviour
             if (dependencyMatrix[sourceIndex, i])
             {
                 buttonList[i].Rotate();
+                buttonList[i].ToggleLight();
             }
         }
 
