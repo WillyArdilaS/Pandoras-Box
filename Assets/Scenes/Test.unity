@@ -968,6 +968,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 49f27325-b47e-4aa6-aff2-f00eab89199a
     m_ActionName: 'Player/Go Back[/XInputControllerWindows/buttonEast,/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a34088ea-cf26-445d-87b0-fc54438d99c5
+    m_ActionName: 'Player/Reset Rotation[/Mouse/middleButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
