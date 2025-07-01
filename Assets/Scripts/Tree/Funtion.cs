@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Funtion : MonoBehaviour
@@ -17,6 +18,7 @@ public class Funtion : MonoBehaviour
     public class Controlador
     {
         public GameObject objetoControlador;
+        public GameObject perilla;
         public ObjetoConAccion[] objetosAfectados;
     }
 
@@ -32,6 +34,7 @@ public class Funtion : MonoBehaviour
 
     private Camera cam;
     private PlayerInput playerInput;
+    private bool PerillaGirando = false;
 
     void Awake()
     {
@@ -45,16 +48,25 @@ public class Funtion : MonoBehaviour
         {
             foreach (ObjetoConAccion item in controlador.objetosAfectados)
             {
-                foreach (GameObject verdeObj in objetosInicialesVerdes)
+                Renderer rend = item.objeto.GetComponent<Renderer>();
+                QueColor qc = item.objeto.GetComponent<QueColor>();
+                if (rend == null || qc == null)
                 {
-                    if (item.objeto == verdeObj)
-                    {
-                        Renderer rend = item.objeto.GetComponent<Renderer>();
-                        if (rend != null)
-                        {
-                            rend.material.color = Color.green;
-                        }
-                    }
+                    continue;
+                }
+                    
+
+                Material mat = rend.sharedMaterial;
+
+                if (qc.esVerde)
+                {
+                    mat.EnableKeyword("_EMISSION");
+                    Color c = mat.GetColor("_EmissionColor");
+                    mat.SetColor("_EmissionColor", c);
+                }
+                else
+                {
+                    mat.DisableKeyword("_EMISSION");
                 }
             }
         }
@@ -62,7 +74,7 @@ public class Funtion : MonoBehaviour
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (!context.performed || PerillaGirando) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Ray ray = cam.ScreenPointToRay(mousePosition);
@@ -73,11 +85,33 @@ public class Funtion : MonoBehaviour
             {
                 if (hit.transform.gameObject == controlador.objetoControlador)
                 {
+                    StartCoroutine(RotarPerilla(controlador.perilla));
                     AplicarAcciones(controlador);
                     break;
                 }
             }
         }
+    }
+
+    IEnumerator RotarPerilla(GameObject perilla)
+    {
+        PerillaGirando = true;
+
+        Quaternion startRotation = perilla.transform.rotation;
+        Quaternion endRotation = startRotation * Quaternion.Euler(0, 90, 0);
+
+        float elapsedTime = 0f;
+        float duration = 0.5f;
+
+        while (elapsedTime < duration)
+        {
+            perilla.transform.rotation = Quaternion.Lerp(startRotation, endRotation, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        perilla.transform.rotation = endRotation;
+        PerillaGirando = false;
     }
 
     void AplicarAcciones(Controlador controlador)
@@ -92,11 +126,19 @@ public class Funtion : MonoBehaviour
 
                 case TipoAccion.CambiarColor:
                     Renderer rend = item.objeto.GetComponent<Renderer>();
-                    if (rend != null)
+                    QueColor qc = item.objeto.GetComponent<QueColor>();
+
+                    if (rend != null && qc != null)
                     {
-                        Color actual = rend.material.color;
-                        bool nuevoEsVerde = !esVerde(actual);
-                        rend.material.color = nuevoEsVerde ? Color.green : Color.white;
+                        Material mat = rend.sharedMaterial;
+                        bool encender = !qc.esVerde;
+
+                        if (encender)
+                            mat.EnableKeyword("_EMISSION");
+                        else
+                            mat.DisableKeyword("_EMISSION");
+
+                        qc.esVerde = encender;
                     }
                     break;
 
@@ -110,13 +152,13 @@ public class Funtion : MonoBehaviour
             }
         }
 
-        if (TodosEstanEnVerde())
+        if (TodosTienenEmisionActiva())
         {
-            Debug.Log("Todos los objetos están en verde.");
+            Debug.Log("Todos los objetos tienen la emisión activada.");
         }
     }
 
-    bool TodosEstanEnVerde()
+    bool TodosTienenEmisionActiva()
     {
         HashSet<GameObject> revisados = new HashSet<GameObject>();
 
@@ -127,8 +169,9 @@ public class Funtion : MonoBehaviour
                 if (item.accion == TipoAccion.CambiarColor && !revisados.Contains(item.objeto))
                 {
                     revisados.Add(item.objeto);
-                    Renderer rend = item.objeto.GetComponent<Renderer>();
-                    if (rend == null || !esVerde(rend.material.color))
+                    QueColor qc = item.objeto.GetComponent<QueColor>();
+
+                    if (qc == null || !qc.esVerde)
                     {
                         return false;
                     }
@@ -137,10 +180,5 @@ public class Funtion : MonoBehaviour
         }
 
         return true;
-    }
-
-    bool esVerde(Color color)
-    {
-        return color == Color.green;
     }
 }
