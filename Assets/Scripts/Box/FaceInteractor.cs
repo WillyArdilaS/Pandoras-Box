@@ -16,10 +16,7 @@ public class FaceInteractor : MonoBehaviour
 
     void Awake()
     {
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main;
-        }
+        mainCamera = Camera.main;
     }
 
     void Update()

@@ -44,10 +44,7 @@ public class BoxController : MonoBehaviour
 
     void Awake()
     {
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main;
-        }
+        mainCamera = Camera.main;
 
         initialRotationValues = transform.rotation;
 

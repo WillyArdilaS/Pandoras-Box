@@ -4,41 +4,25 @@ using UnityEngine.InputSystem;
 
 public class FaceContent : MonoBehaviour
 {
-    /*
-        x Detectar que entramos en modo interacción.
-        x Activar los objetos interactuables (botones, interruptores, pantallas, etc.).
-        - Permitir al jugador navegar entre esos objetos (con joystick, teclas, etc.).
-        - Resaltar el objeto actual en focus (por ejemplo con outline o animación).
-        - Delegar a cada objeto interactuable su comportamiento cuando se presiona "usar" o "interactua
-
-        - BoxFaceContent se encarga solo de la interacción general con los elementos.
-        - Cada objeto interactuable tiene su propio script (ej: CablePuzzle, ButtonPuzzle, SimonPuzzle), y se suscribe o comunica con un gestor mayor si hace falta.
-
-        FaceContent (1 por cara)
-        ├── Administra si la cara está activa
-        ├── Activa/desactiva los objetos interactuables
-        ├── Detecta el input del jugador
-        └── Delega la acción a:
-
-            ├── ButtonPuzzle (si hay)
-    */
-
     // === Input ===
     private PlayerInput playerInput;
     private InputAction navigateAction;
+    private InputAction interactAction;
 
     // === Interactable object management ===
-    [Header("Interactable object management")]
-    [SerializeField] private List<GameObject> interactables = new();
+    private List<GameObject> interactables = new();
     private GameObject currentInteractable;
     private bool isActive = false;
 
     // === Navigation (stick) ===
-    [Header("Navigation")]
+    [Header("Stick Navigation")]
     [SerializeField] private float navigationCooldown;
     private float navigationTimer = 0f;
 
     // === Navigation (mouse) ===
+    [Header("Mouse Navigation")]
+    [SerializeField] private LayerMask interactableLayer;
+    private Camera mainCamera;
 
     // === Getter ===
     public bool IsActive => isActive;
@@ -47,7 +31,6 @@ public class FaceContent : MonoBehaviour
     {
         // Search for interactables objects on the face and add them to the list
         Transform interactableContainer = transform.Find("Interactables");
-
         if (interactableContainer != null)
         {
             foreach (Transform child in interactableContainer.transform)
@@ -61,14 +44,18 @@ public class FaceContent : MonoBehaviour
             currentInteractable = interactables[0];
         }
 
+        mainCamera = Camera.main;
+
         playerInput = GetComponentInParent<PlayerInput>();
         navigateAction = playerInput.actions["Navigate"];
+        interactAction = playerInput.actions["Interact"];
     }
 
     void Update()
     {
         if (!isActive) return;
 
+        // For stick
         navigationTimer += Time.deltaTime;
         Vector2 navigateInput = navigateAction.ReadValue<Vector2>();
 
@@ -78,12 +65,20 @@ public class FaceContent : MonoBehaviour
             NavigateWithStick(navigateInput);
             navigationTimer = 0f;
         }
+
+        // For mouse
+        NavigationWithMouse();
+
+        // Detect if an interactive object is pressed
+        if (interactAction.WasPressedThisFrame())
+        {
+            TryInteractWithCurrent();
+        }
     }
 
     public void ActivateContent()
     {
         if (interactables.Count == 0) return;
-
         isActive = true;
         Highlight(currentInteractable);
     }
@@ -163,6 +158,39 @@ public class FaceContent : MonoBehaviour
             RemoveHighlight(currentInteractable);
             currentInteractable = closestSelectable;
             Highlight(currentInteractable);
+        }
+    }
+
+    // Can navigate between interacting objects by hovering the mouse over them
+    private void NavigationWithMouse()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        if (Physics.Raycast(ray, out RaycastHit hit, 20f, interactableLayer))
+        {
+            GameObject hovered = hit.collider.gameObject;
+
+            // Only change if it's different from the current one
+            if (hovered != currentInteractable && interactables.Contains(hovered))
+            {
+                RemoveHighlight(currentInteractable);
+                currentInteractable = hovered;
+                Highlight(currentInteractable);
+            }
+        }
+    }
+
+    // Interacts with the currently selected object if it implements the IInteractable interface
+    private void TryInteractWithCurrent()
+    {
+        if (currentInteractable == null) return;
+
+        if (currentInteractable.TryGetComponent<IInteractable>(out var interactable))
+        {
+            interactable.Interact();
+        }
+        else
+        {
+            Debug.LogWarning($"{currentInteractable.name} no implementa IInteractable");
         }
     }
 }
