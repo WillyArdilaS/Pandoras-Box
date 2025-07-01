@@ -30,7 +30,7 @@ public class FaceContent : MonoBehaviour
     void Awake()
     {
         // Search for interactables objects on the face and add them to the list
-        Transform interactableContainer = transform.Find("Interactables");
+        Transform interactableContainer = transform.Find("Puzzle1")?.transform.Find("Interactables");
         if (interactableContainer != null)
         {
             foreach (Transform child in interactableContainer.transform)
