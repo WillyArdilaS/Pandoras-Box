@@ -522,6 +522,15 @@
             "id": "8bb91c67-4fc4-4279-b6a5-7dec31c5b28b",
             "actions": [
                 {
+                    "name": "Navigate",
+                    "type": "Value",
+                    "id": "63428c2f-92da-4372-a31c-961a3dc28d3d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Rotate",
                     "type": "Value",
                     "id": "2b5bd638-a981-4d21-b660-a0c7092bb3c4",
@@ -578,8 +587,19 @@
             ],
             "bindings": [
                 {
+                    "name": "",
+                    "id": "23e309d7-4b3e-496c-82d1-cbcd8d0dacc7",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "Hold Left Button Mouse",
-                    "id": "c456eaf9-2cb9-4b99-ae40-9f7d52933587",
+                    "id": "2aedd6d3-2463-4666-b900-52f2f5f50fbe",
                     "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
@@ -590,7 +610,7 @@
                 },
                 {
                     "name": "modifier",
-                    "id": "3a2b24f4-be01-49ae-bd2a-059f73b15328",
+                    "id": "fd092e97-04fa-4864-90ca-ebac2ffa21a5",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
@@ -601,7 +621,7 @@
                 },
                 {
                     "name": "binding",
-                    "id": "28f5099e-051e-4d18-980e-9348d9d75ac3",
+                    "id": "13c2b9c6-6861-4620-bc38-52abd848e74a",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
@@ -609,17 +629,6 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "23e309d7-4b3e-496c-82d1-cbcd8d0dacc7",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Rotate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
@@ -728,6 +737,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reset Rotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d6ea5149-d955-428b-9b0b-fbe6b52f453b",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

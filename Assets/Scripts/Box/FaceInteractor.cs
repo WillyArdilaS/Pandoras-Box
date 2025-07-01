@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BoxFaceInteractor : MonoBehaviour
+public class FaceInteractor : MonoBehaviour
 {
     // === Face tracking ===
     [SerializeField] private LayerMask faceLayer;
@@ -16,10 +16,7 @@ public class BoxFaceInteractor : MonoBehaviour
 
     void Awake()
     {
-        if (mainCamera == null)
-        {
-            mainCamera = Camera.main;
-        }
+        mainCamera = Camera.main;
     }
 
     void Update()
@@ -39,7 +36,6 @@ public class BoxFaceInteractor : MonoBehaviour
         if (Physics.Raycast(cameraRay, out RaycastHit hit, 20f, faceLayer))
         {
             currentFace = hit.collider.gameObject;
-
             HighlightFace(currentFace);
         }
     }
@@ -60,7 +56,6 @@ public class BoxFaceInteractor : MonoBehaviour
         lastHighlightedFace = newFace;
     }
 
-    // Manage outline state
     public void SetOutlineEnabled(bool enabledState)
     {
         isOutlineEnabled = enabledState;
@@ -68,6 +63,7 @@ public class BoxFaceInteractor : MonoBehaviour
         if (!enabledState && lastHighlightedFace != null)
         {
             lastHighlightedFace.GetComponent<Outline>().enabled = false;
+            lastHighlightedFace = null;
         }
     }
 }

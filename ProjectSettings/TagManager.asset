@@ -8,11 +8,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - BoxFace
+  - 
   - Water
   - UI
-  - 
-  - 
+  - BoxFace
+  - Interactable
   - 
   - 
   - 
