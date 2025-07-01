@@ -11,8 +11,7 @@ Material:
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -80,6 +79,6 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
-    - _EmissionColor: {r: 0.20282942, g: 0.7540373, b: 1, a: 1}
+    - _EmissionColor: {r: 0.20282933, g: 0.7540373, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
