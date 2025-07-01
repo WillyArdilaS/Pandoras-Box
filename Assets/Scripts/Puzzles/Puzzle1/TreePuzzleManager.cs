@@ -3,12 +3,16 @@ using UnityEngine;
 
 public class TreePuzzleManager : MonoBehaviour
 {
+    // === Script references ===
+    [SerializeField] private GameManager gameManagerScript;
+    
     [Header("Botones del puzzle en orden")]
     [SerializeField] private List<TreeButton> buttonList = new();
     private bool[,] dependencyMatrix; // Adjacency matrix: each row represents a button and its impact on the others - [i][j] = true if button i affects button j
 
     void Awake()
     {
+        gameManagerScript = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
         // Validar que hay botones
         if (buttonList.Count == 0)
@@ -90,7 +94,6 @@ public class TreePuzzleManager : MonoBehaviour
     private void OnPuzzleSolved()
     {
         Debug.Log("¡Puzzle resuelto!");
-        // Aquí más adelante podrías bloquear los botones, mostrar efectos, etc.
-        //Notificar al sistema si el puzzle fue resuelto
+        gameManagerScript.ShowPuzzleCompletedUI();
     }
 }
