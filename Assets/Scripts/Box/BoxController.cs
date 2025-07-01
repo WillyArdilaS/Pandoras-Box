@@ -16,6 +16,7 @@ public class BoxController : MonoBehaviour
     [SerializeField] private float mouseSensitivityFactor;
     [SerializeField] private float minRotationInput;
     private Vector2 rotationInput;
+    private bool canRotate = true;
 
     // === Rotation interpolation ===
     [SerializeField] private float rotationDuration;
@@ -25,7 +26,7 @@ public class BoxController : MonoBehaviour
     private float rotationTimer = 0f;
 
     // === Reset rotation ===
-    [SerializeField] private Quaternion initialRotationValues;
+    private Quaternion initialRotationValues;
 
     // === Zoom ===
     [Header("Zoom")]
@@ -37,8 +38,9 @@ public class BoxController : MonoBehaviour
     private float zoomInInput;
     private float zoomOutInput;
 
-    // === Getters ===
+    // === Setters and getters ===
     public bool IsRotating => isRotating;
+    public bool CanRotate { set => canRotate = value; }
 
     void Awake()
     {
@@ -83,14 +85,15 @@ public class BoxController : MonoBehaviour
         // Reading inputs
         device = GetActiveDevice();
 
-        rotationInput = rotateAction.ReadValue<Vector2>();
-        RotateBox();
-
         zoomInInput = zoomInAction.ReadValue<float>();
         zoomOutInput = zoomOutAction.ReadValue<float>();
 
         HandleZoom(zoomInInput, maxZoom, 1);
         HandleZoom(zoomOutInput, minZoom, -1);
+
+        if (!canRotate) return; // Check if it can rotate
+        rotationInput = rotateAction.ReadValue<Vector2>();
+        RotateBox();
     }
 
     // Detect the last input type received
